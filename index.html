@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+import zipfile
+
+# HTML mit dem neuen Button + Kartenmechanik
+html_content_button = """<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8" />
@@ -16,6 +19,7 @@
             align-items: center;
             height: 100vh;
             flex-direction: column;
+            text-align: center;
         }
         h1 {
             font-size: 2.5rem;
@@ -27,10 +31,110 @@
             font-size: 1.2rem;
             margin-top: 0;
         }
+        button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            background-color: #facc15;
+            color: #111;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        button:hover {
+            background-color: #fbd437;
+        }
+        .karte {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px solid #facc15;
+            border-radius: 8px;
+            max-width: 400px;
+        }
+        .option {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #222;
+            border: 1px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #333;
+        }
     </style>
 </head>
 <body>
     <h1>SIGMA RISING</h1>
     <p>Geld. Freiheit. Wahnsinn.</p>
+    <button onclick="startGame()">Spiel starten</button>
+    <div id="spielbereich"></div>
+
+    <script>
+        const karten = [
+            {
+                frage: "Du erbst 50.000€. Was machst du?",
+                optionen: [
+                    "A: Kaufe Krypto.",
+                    "B: Gründe ein Underground-Coaching.",
+                    "C: Zahle deine Schulden (langweilig)."
+                ]
+            },
+            {
+                frage: "Du bekommst ein unmoralisches Angebot.",
+                optionen: [
+                    "A: Nimm das Geld und investiere.",
+                    "B: Leake es an die Presse.",
+                    "C: Lass dich nicht erwischen und baue dein Imperium."
+                ]
+            }
+        ];
+
+        let aktuelleKarte = 0;
+
+        function startGame() {
+            zeigeKarte();
+        }
+
+        function zeigeKarte() {
+            if (aktuelleKarte >= karten.length) {
+                document.getElementById("spielbereich").innerHTML = "<p>Spiel beendet. Danke für's Mitspielen.</p>";
+                return;
+            }
+
+            const karte = karten[aktuelleKarte];
+            let html = `
+                <div class="karte">
+                    <h2>${karte.frage}</h2>
+                    ${karte.optionen.map(opt => `<div class="option" onclick="naechsteKarte()">${opt}</div>`).join('')}
+                </div>
+            `;
+            document.getElementById("spielbereich").innerHTML = html;
+        }
+
+        function naechsteKarte() {
+            aktuelleKarte++;
+            zeigeKarte();
+        }
+    </script>
 </body>
 </html>
+"""
+
+# Speichere index.html
+index_html_path_button = "/mnt/data/index_button.html"
+with open(index_html_path_button, "w", encoding="utf-8") as f:
+    f.write(html_content_button)
+
+# Leeres wolf.ico als Platzhalter
+favicon_path_button = "/mnt/data/wolf.ico"
+with open(favicon_path_button, "wb") as f:
+    f.write(b"")
+
+# ZIP erstellen
+zip_output_path_button = "/mnt/data/sigma_rising_site_with_button.zip"
+with zipfile.ZipFile(zip_output_path_button, "w") as zipf:
+    zipf.write(index_html_path_button, arcname="index.html")
+    zipf.write(favicon_path_button, arcname="wolf.ico")
+
+zip_output_path_button
