@@ -1,7 +1,4 @@
-import zipfile
-
-# HTML mit dem neuen Button + Kartenmechanik
-html_content_button = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8" />
@@ -119,22 +116,3 @@ html_content_button = """<!DOCTYPE html>
     </script>
 </body>
 </html>
-"""
-
-# Speichere index.html
-index_html_path_button = "/mnt/data/index_button.html"
-with open(index_html_path_button, "w", encoding="utf-8") as f:
-    f.write(html_content_button)
-
-# Leeres wolf.ico als Platzhalter
-favicon_path_button = "/mnt/data/wolf.ico"
-with open(favicon_path_button, "wb") as f:
-    f.write(b"")
-
-# ZIP erstellen
-zip_output_path_button = "/mnt/data/sigma_rising_site_with_button.zip"
-with zipfile.ZipFile(zip_output_path_button, "w") as zipf:
-    zipf.write(index_html_path_button, arcname="index.html")
-    zipf.write(favicon_path_button, arcname="wolf.ico")
-
-zip_output_path_button
