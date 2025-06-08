@@ -12,11 +12,10 @@
             background: #111;
             color: #eee;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             flex-direction: column;
+            align-items: center;
             text-align: center;
+            padding: 20px;
         }
         h1 {
             font-size: 2.5rem;
@@ -59,12 +58,35 @@
         .option:hover {
             background-color: #333;
         }
+        .statusleisten {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .status {
+            background: #222;
+            border: 2px solid #facc15;
+            padding: 8px 12px;
+            border-radius: 6px;
+            min-width: 120px;
+        }
     </style>
 </head>
 <body>
     <h1>SIGMA RISING</h1>
     <p>Geld. Freiheit. Wahnsinn.</p>
-    <button onclick="startGame()">Spiel starten</button>
+
+    <div class="statusleisten">
+        <div class="status" id="geld">💰 Geld: 1000</div>
+        <div class="status" id="freiheit">🕊️ Freiheit: 100</div>
+        <div class="status" id="einfluss">📈 Einfluss: 50</div>
+        <div class="status" id="anziehung">😎 Anziehungskraft: 20</div>
+    </div>
+
+    <button id="startButton" onclick="startGame()">Spiel starten</button>
+
     <div id="spielbereich"></div>
 
     <script>
@@ -72,24 +94,30 @@
             {
                 frage: "Du erbst 50.000€. Was machst du?",
                 optionen: [
-                    "A: Kaufe Krypto.",
-                    "B: Gründe ein Underground-Coaching.",
-                    "C: Zahle deine Schulden (langweilig)."
+                    { text: "A: Kaufe Krypto.", effect: () => geld += 10000 },
+                    { text: "B: Gründe ein Underground-Coaching.", effect: () => einfluss += 20 },
+                    { text: "C: Zahle deine Schulden (langweilig).", effect: () => freiheit += 10 }
                 ]
             },
             {
                 frage: "Du bekommst ein unmoralisches Angebot.",
                 optionen: [
-                    "A: Nimm das Geld und investiere.",
-                    "B: Leake es an die Presse.",
-                    "C: Lass dich nicht erwischen und baue dein Imperium."
+                    { text: "A: Nimm das Geld und investiere.", effect: () => geld += 15000 },
+                    { text: "B: Leake es an die Presse.", effect: () => einfluss -= 10 },
+                    { text: "C: Lass dich nicht erwischen und baue dein Imperium.", effect: () => freiheit -= 20 }
                 ]
             }
         ];
 
+        let geld = 1000;
+        let freiheit = 100;
+        let einfluss = 50;
+        let anziehung = 20;
+
         let aktuelleKarte = 0;
 
         function startGame() {
+            document.getElementById("startButton").style.display = "none";
             zeigeKarte();
         }
 
@@ -103,15 +131,26 @@
             let html = `
                 <div class="karte">
                     <h2>${karte.frage}</h2>
-                    ${karte.optionen.map(opt => `<div class="option" onclick="naechsteKarte()">${opt}</div>`).join('')}
+                    ${karte.optionen.map((opt, index) => 
+                        `<div class="option" onclick="waehleOption(${index})">${opt.text}</div>`).join('')}
                 </div>
             `;
             document.getElementById("spielbereich").innerHTML = html;
         }
 
-        function naechsteKarte() {
+        function waehleOption(index) {
+            const option = karten[aktuelleKarte].optionen[index];
+            option.effect();
+            updateStatus();
             aktuelleKarte++;
             zeigeKarte();
+        }
+
+        function updateStatus() {
+            document.getElementById("geld").innerText = `💰 Geld: ${geld}`;
+            document.getElementById("freiheit").innerText = `🕊️ Freiheit: ${freiheit}`;
+            document.getElementById("einfluss").innerText = `📈 Einfluss: ${einfluss}`;
+            document.getElementById("anziehung").innerText = `😎 Anziehungskraft: ${anziehung}`;
         }
     </script>
 </body>
