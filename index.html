@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -136,19 +137,34 @@
 
         function zeigeKarte() {
             if (geld >= 100000) {
-                document.getElementById("spielbereich").innerHTML = "<p>🎉 Du hast dir die Freiheit erkauft. Sieg!</p>";
+                document.getElementById("spielbereich").innerHTML = `
+                    <h2>🎉 Sieg!</h2>
+                    <p>Du hast dir die ultimative Freiheit erkauft und chillst jetzt auf den Cayman Islands 🏝️</p>
+                    <button onclick="location.reload()">Nochmal spielen</button>
+                `;
                 return;
             }
             if (freiheit <= 0) {
-                document.getElementById("spielbereich").innerHTML = "<p>💥 Keine Freiheit mehr. Du wanderst aus. Game Over.</p>";
+                document.getElementById("spielbereich").innerHTML = `
+                    <h2>💥 Keine Freiheit mehr!</h2>
+                    <p>Du wirst von einer EU-Taskforce abgeholt und in ein gendergerechtes Re-Sozialisierungsprogramm gesteckt. 🏳️‍🌈</p>
+                    <button onclick="location.reload()">Nochmal spielen</button>
+                `;
                 return;
             }
             if (anziehung >= 100) {
-                document.getElementById("spielbereich").innerHTML = "<p>💋 Deine Anziehungskraft wurde dir zum Verhängnis. Stalkerinnen zerstören dein Leben. Game Over.</p>";
+                document.getElementById("spielbereich").innerHTML = `
+                    <h2>💋 Du wurdest Opfer deiner Anziehungskraft!</h2>
+                    <p>Stalkerinnen zerstören dein Leben. Du ziehst dich ins Kloster zurück. 🕍</p>
+                    <button onclick="location.reload()">Nochmal spielen</button>
+                `;
                 return;
             }
             if (aktuelleKarte >= karten.length) {
-                document.getElementById("spielbereich").innerHTML = "<p>🃏 Spiel beendet. Danke fürs Mitspielen!</p>";
+                document.getElementById("spielbereich").innerHTML = `
+                    <p>🃏 Spiel beendet. Danke fürs Mitspielen!</p>
+                    <button onclick="location.reload()">Nochmal spielen</button>
+                `;
                 return;
             }
 
