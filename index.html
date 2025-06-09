@@ -7,72 +7,21 @@
     <title>SIGMA RISING – Geld. Freiheit. Wahnsinn.</title>
     <link rel="icon" href="wolf.ico" type="image/x-icon" />
     <style>
-        body {
-            margin: 0;
-            font-family: sans-serif;
-            background: #111;
-            color: #eee;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 2.5rem;
-            color: #facc15;
-            margin-bottom: 0.5rem;
-        }
-        p {
-            color: #aaa;
-            font-size: 1.2rem;
-            margin-top: 0;
-        }
-        button {
-            margin-top: 20px;
-            padding: 12px 24px;
-            font-size: 1rem;
-            background-color: #facc15;
-            color: #111;
-            border: none;
-            cursor: pointer;
-            border-radius: 6px;
-        }
-        button:hover {
-            background-color: #fbd437;
-        }
-        .karte {
-            margin-top: 30px;
-            padding: 20px;
-            border: 2px solid #facc15;
-            border-radius: 8px;
-            max-width: 400px;
-        }
-        .option {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #222;
-            border: 1px solid #555;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .option:hover {
-            background-color: #333;
-        }
-        .statusleisten {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .status {
-            background: #222;
-            border: 2px solid #facc15;
-            padding: 8px 12px;
-            border-radius: 6px;
-            min-width: 120px;
-        }
+        body { margin:0; font-family:sans-serif; background:#111; color:#eee;
+        display:flex; flex-direction:column; align-items:center; text-align:center; padding:20px;}
+        h1 { font-size:2.5rem; color:#facc15; margin-bottom:0.5rem;}
+        p { color:#aaa; font-size:1.2rem; margin-top:0;}
+        button { margin-top:20px; padding:12px 24px; font-size:1rem; background-color:#facc15;
+        color:#111; border:none; cursor:pointer; border-radius:6px;}
+        button:hover { background-color:#fbd437;}
+        .karte { margin-top:30px; padding:20px; border:2px solid #facc15; border-radius:8px; max-width:400px;}
+        .option { margin-top:10px; padding:10px; background-color:#222; border:1px solid #555;
+        border-radius:4px; cursor:pointer;}
+        .option:hover { background-color:#333;}
+        .statusleisten { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; justify-content:center;}
+        .status { background:#222; border:2px solid #facc15; padding:8px 12px; border-radius:6px; min-width:200px; text-align:left;}
+        .bar { background:#333; border:1px solid #555; height:12px; width:100%; border-radius:4px; margin-top:5px; position:relative;}
+        .bar-fill { background:#facc15; height:100%; width:50%; border-radius:4px; transition:width 0.3s ease;}
     </style>
 </head>
 <body>
@@ -80,10 +29,22 @@
     <p>Geld. Freiheit. Wahnsinn.</p>
 
     <div class="statusleisten">
-        <div class="status" id="geld">💰 Geld: 1000</div>
-        <div class="status" id="freiheit">🕊️ Freiheit: 100</div>
-        <div class="status" id="einfluss">📈 Einfluss: 50</div>
-        <div class="status" id="anziehung">😎 Anziehungskraft: 20</div>
+        <div class="status">
+            💰 Geld: <span id="geldText">1000</span>
+            <div class="bar"><div id="geldBar" class="bar-fill"></div></div>
+        </div>
+        <div class="status">
+            🕊️ Freiheit: <span id="freiheitText">100</span>
+            <div class="bar"><div id="freiheitBar" class="bar-fill"></div></div>
+        </div>
+        <div class="status">
+            📈 Einfluss: <span id="einflussText">50</span>
+            <div class="bar"><div id="einflussBar" class="bar-fill"></div></div>
+        </div>
+        <div class="status">
+            😎 Anziehungskraft: <span id="anziehungText">20</span>
+            <div class="bar"><div id="anziehungBar" class="bar-fill"></div></div>
+        </div>
     </div>
 
     <button id="startButton" onclick="startGame()">Spiel starten</button>
@@ -101,26 +62,6 @@
                 { text: "A: Nimm das Geld und investiere.", effect: () => geld += 15000 },
                 { text: "B: Leake es an die Presse.", effect: () => einfluss -= 10 },
                 { text: "C: Lass dich nicht erwischen und baue dein Imperium.", effect: () => freiheit -= 20 }
-            ]},
-            { frage: "Börsencrash! Wie reagierst du?", optionen: [
-                { text: "A: Cash halten.", effect: () => freiheit += 5 },
-                { text: "B: All-in!", effect: () => { geld += 25000; freiheit -= 10; } },
-                { text: "C: Diversifizieren.", effect: () => einfluss += 10 }
-            ]},
-            { frage: "Stalkerinnen! Was tust du?", optionen: [
-                { text: "A: Umziehen.", effect: () => geld -= 10000 },
-                { text: "B: PR nutzen.", effect: () => einfluss += 20 },
-                { text: "C: Security anheuern.", effect: () => freiheit -= 5 }
-            ]},
-            { frage: "Politik ändert das Gesetz. Deine Reaktion?", optionen: [
-                { text: "A: Lobbyarbeit.", effect: () => { geld -= 15000; einfluss += 10; } },
-                { text: "B: Land verlassen.", effect: () => { geld -= 30000; freiheit += 20; } },
-                { text: "C: Tricksen.", effect: () => { einfluss += 15; freiheit -= 10; } }
-            ]},
-            { frage: "Sozialisten fordern Enteignung. Deine Antwort?", optionen: [
-                { text: "A: Spenden.", effect: () => { geld -= 10000; einfluss += 10; } },
-                { text: "B: Fliehen.", effect: () => { geld -= 20000; freiheit += 15; } },
-                { text: "C: Gegner mobilisieren.", effect: () => { einfluss += 30; freiheit -= 5; } }
             ]}
         ];
 
@@ -188,11 +129,18 @@
         }
 
         function updateStatus() {
-            document.getElementById("geld").innerText = `💰 Geld: ${geld}`;
-            document.getElementById("freiheit").innerText = `🕊️ Freiheit: ${freiheit}`;
-            document.getElementById("einfluss").innerText = `📈 Einfluss: ${einfluss}`;
-            document.getElementById("anziehung").innerText = `😎 Anziehungskraft: ${anziehung}`;
+            document.getElementById("geldText").innerText = geld;
+            document.getElementById("freiheitText").innerText = freiheit;
+            document.getElementById("einflussText").innerText = einfluss;
+            document.getElementById("anziehungText").innerText = anziehung;
+
+            document.getElementById("geldBar").style.width = Math.min(geld / 1000 * 100, 100) + "%";
+            document.getElementById("freiheitBar").style.width = Math.min(freiheit, 100) + "%";
+            document.getElementById("einflussBar").style.width = Math.min(einfluss, 100) + "%";
+            document.getElementById("anziehungBar").style.width = Math.min(anziehung, 100) + "%";
         }
+
+        updateStatus();
     </script>
 </body>
 </html>
