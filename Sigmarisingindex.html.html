@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIGMA RISING – Geld. Freiheit. Wahnsinn.</title>
+    <link rel="icon" href="wolf.ico" type="image/x-icon" />
+    <style>
+        body { margin:0; font-family:sans-serif; background:#111; color:#eee;
+        display:flex; flex-direction:column; align-items:center; text-align:center; padding:20px;}
+        h1 { font-size:2.5rem; color:#facc15; margin-bottom:0.5rem;}
+        p { color:#aaa; font-size:1.2rem; margin-top:0;}
+        button { margin-top:20px; padding:12px 24px; font-size:1rem; background-color:#facc15;
+        color:#111; border:none; cursor:pointer; border-radius:6px;}
+        button:hover { background-color:#fbd437;}
+        .karte { margin-top:30px; padding:20px; border:2px solid #facc15; border-radius:8px; max-width:400px;}
+        .option { margin-top:10px; padding:10px; background-color:#222; border:1px solid #555;
+        border-radius:4px; cursor:pointer;}
+        .option:hover { background-color:#333;}
+        .statusleisten { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; justify-content:center;}
+        .status { background:#222; border:2px solid #facc15; padding:8px 12px; border-radius:6px; min-width:200px; text-align:left;}
+        .bar { background:#333; border:1px solid #555; height:12px; width:100%; border-radius:4px; margin-top:5px; position:relative;}
+        .bar-fill { background:#facc15; height:100%; border-radius:4px; transition:width 0.3s ease;}
+    </style>
+</head>
+<body>
+    <h1>SIGMA RISING</h1>
+    <p>Geld. Freiheit. Wahnsinn.</p>
+
+    <div class="statusleisten">
+        <div class="status">
+            💰 Geld: <span id="geldText">1000</span>
+            <div class="bar"><div id="geldBar" class="bar-fill"></div></div>
+        </div>
+        <div class="status">
+            🕊️ Freiheit: <span id="freiheitText">100</span>
+            <div class="bar"><div id="freiheitBar" class="bar-fill"></div></div>
+        </div>
+        <div class="status">
+            📈 Einfluss: <span id="einflussText">50</span>
+            <div class="bar"><div id="einflussBar" class="bar-fill"></div></div>
+        </div>
+        <div class="status">
+            😎 Anziehungskraft: <span id="anziehungText">20</span>
+            <div class="bar"><div id="anziehungBar" class="bar-fill"></div></div>
+        </div>
+    </div>
+
+    <button id="startButton" onclick="startGame()">Spiel starten</button>
+
+    <div id="spielbereich"></div>
+
+    <script>
+        const karten = [
+            // ---- ALTE KARTEN ----
+            { frage: "Du erbst 50.000€. Was machst du?", optionen: [
+                { text: "A: Kaufe Krypto.", effect: () => geld += 10000 },
+                { text: "B: Gründe ein Underground-Coaching.", effect: () => einfluss += 20 },
+                { text: "C: Zahle deine Schulden (langweilig).", effect: () => freiheit += 10 }
+            ]},
+            { frage: "Du bekommst ein unmoralisches Angebot.", optionen: [
+                { text: "A: Nimm das Geld und investiere.", effect: () => geld += 15000 },
+                { text: "B: Leake es an die Presse.", effect: () => einfluss -= 10 },
+                { text: "C: Lass dich nicht erwischen und baue dein Imperium.", effect: () => freiheit -= 20 }
+            ]},
+            { frage: "Börsencrash! Wie reagierst du?", optionen: [
+                { text: "A: Cash halten.", effect: () => freiheit += 5 },
+                { text: "B: All-in!", effect: () => { geld += 25000; freiheit -= 10; } },
+                { text: "C: Diversifizieren.", effect: () => einfluss += 10 }
+            ]},
+            { frage: "Stalkerinnen! Was tust du?", optionen: [
+                { text: "A: Umziehen.", effect: () => geld -= 10000 },
+                { text: "B: PR nutzen.", effect: () => einfluss += 20 },
+                { text: "C: Security anheuern.", effect: () => freiheit -= 5 }
+            ]},
+            { frage: "Politik ändert das Gesetz. Deine Reaktion?", optionen: [
+                { text: "A: Lobbyarbeit.", effect: () => { geld -= 15000; einfluss += 10; } },
+                { text: "B: Land verlassen.", effect: () => { geld -= 30000; freiheit += 20; } },
+                { text: "C: Tricksen.", effect: () => { einfluss += 15; freiheit -= 10; } }
+            ]},
+            { frage: "Sozialisten fordern Enteignung. Deine Antwort?", optionen: [
+                { text: "A: Spenden.", effect: () => { geld -= 10000; einfluss += 10; } },
+                { text: "B: Fliehen.", effect: () => { geld -= 20000; freiheit += 15; } },
+                { text: "C: Gegner mobilisieren.", effect: () => { einfluss += 30; freiheit -= 5; } }
+            ]},
+
+            // ---- NEUE KARTEN ----
+            { frage: "Du stehst kurz davor, deine erste Million zu erreichen. Was machst du?", optionen: [
+                { text: "A: Lifestyle upgraden.", effect: () => { anziehung += 10; freiheit -= 5; } },
+                { text: "B: Alles reinvestieren.", effect: () => { einfluss += 15; geld += 25000; } },
+                { text: "C: Still und leise feiern.", effect: () => freiheit += 10 }
+            ]},
+            { frage: "Ein dubioser Vertreter einer Schattenregierung will dich als Informant gewinnen.", optionen: [
+                { text: "A: Annehmen.", effect: () => { geld += 20000; freiheit -= 10; } },
+                { text: "B: Ablehnen.", effect: () => freiheit += 10 },
+                { text: "C: Doppelagent spielen.", effect: () => { einfluss += 15; freiheit += 5; anziehung -= 5; } }
+            ]},
+            { frage: "Deine Ex bringt schmutzige Geschichten an die Presse.", optionen: [
+                { text: "A: Leugnen.", effect: () => freiheit += 5 },
+                { text: "B: Gegenkampagne starten.", effect: () => { einfluss += 10; freiheit -= 5; } },
+                { text: "C: Stille Zahlung leisten.", effect: () => { geld -= 10000; freiheit += 10; } }
+            ]},
+            { frage: "Du wirst zum Crypto-Influencer. Wie nutzt du das?", optionen: [
+                { text: "A: Coaching verkaufen.", effect: () => { geld += 15000; einfluss += 10; } },
+                { text: "B: Undercover bleiben.", effect: () => freiheit += 10 },
+                { text: "C: Alles ins Marketing stecken.", effect: () => { einfluss += 15; geld -= 10000; } }
+            ]},
+            { frage: "Die Staatsanwaltschaft interessiert sich plötzlich sehr für deine Geschäfte.", optionen: [
+                { text: "A: Hochpreisigen Anwalt engagieren.", effect: () => { geld -= 20000; freiheit += 10; } },
+                { text: "B: Kooperation.", effect: () => { freiheit += 15; einfluss -= 10; } },
+                { text: "C: Auf Konfrontation gehen.", effect: () => { einfluss += 15; freiheit -= 10; } }
+            ]},
+            { frage: "Eine hochattraktive Frau umgarnt dich — zu gut, um wahr zu sein?", optionen: [
+                { text: "A: Flirt annehmen.", effect: () => { anziehung += 15; freiheit -= 5; } },
+                { text: "B: Vorsicht wahren.", effect: () => freiheit += 10 },
+                { text: "C: Rückzug.", effect: () => { freiheit += 15; anziehung -= 10; } }
+            ]},
+            { frage: "Ein harmloser Spruch von dir wird zum Shitstorm hochgejazzt.", optionen: [
+                { text: "A: Entschuldigen.", effect: () => { freiheit += 10; einfluss -= 5; } },
+                { text: "B: Eskalieren.", effect: () => { einfluss += 15; freiheit -= 5; } },
+                { text: "C: Ironisch kontern.", effect: () => { einfluss += 10; anziehung += 5; } }
+            ]},
+            { frage: "Ein bekannter Promi lädt dich auf ein dekadentes Event ein.", optionen: [
+                { text: "A: Mitgehen und netzwerken.", effect: () => { einfluss += 15; anziehung += 10; } },
+                { text: "B: Absagen.", effect: () => freiheit += 10 },
+                { text: "C: Undercover gehen und Infos sammeln.", effect: () => { einfluss += 10; freiheit += 5; } }
+            ]},
+            { frage: "Plötzlich häufen sich negative Bewertungen und Fake-Meldungen über dich.", optionen: [
+                { text: "A: Öffentlich dagegenhalten.", effect: () => { einfluss += 10; freiheit -= 5; } },
+                { text: "B: Juristisch vorgehen.", effect: () => { geld -= 15000; freiheit += 10; } },
+                { text: "C: Backchannel-Attacke.", effect: () => { einfluss += 15; anziehung += 5; freiheit -= 5; } }
+            ]},
+            { frage: "Regierung kündigt massive Steuer auf Männlichkeits-Coaching an.", optionen: [
+                { text: "A: Du gründest eine geheime 'Sigma-Akademie' im Darknet.", effect: () => { freiheit += 10; einfluss += 10; geld -= 5000; } },
+                { text: "B: Starte Kampagne 'Freiheit statt Gendersozialismus'.", effect: () => { einfluss += 15; freiheit -= 5; } },
+                { text: "C: Du änderst dein Coaching in 'Gendersozialismus statt Freiheit'.", effect: () => { geld += 20000; freiheit -= 10; einfluss += 5; } }
+            ]}
+        ];
+
+        // ---- SPIELVARIABLEN ----
+        let geld = 1000;
+        let freiheit = 100;
+        let einfluss = 50;
+        let anziehung = 20;
+        let aktuelleKarte = 0;
+        function startGame() {
+            document.getElementById("startButton").style.display = "none";
+            zeigeKarte();
+        }
+
+        function zeigeKarte() {
+            if (geld >= 100000) {
+                document.getElementById("spielbereich").innerHTML = `
+                    <h2>🎉 Sieg!</h2>
+                    <p>Du hast dir die ultimative Freiheit erkauft und chillst jetzt auf den Cayman Islands 🏝️</p>
+                    <button onclick="location.reload()">Nochmal spielen</button>
+                `;
+                return;
+            }
+            if (freiheit <= 0) {
+                document.getElementById("spielbereich").innerHTML = `
+                    <h2>💥 Keine Freiheit mehr!</h2>
+                    <p>Du wirst von einer EU-Taskforce abgeholt und in ein gendergerechtes Re-Sozialisierungsprogramm gesteckt. 🏳️‍🌈</p>
+                    <button onclick="location.reload()">Nochmal spielen</button>
+                `;
+                return;
+            }
+            if (anziehung >= 100) {
+                document.getElementById("spielbereich").innerHTML = `
+                    <h2>💋 Du wurdest Opfer deiner Anziehungskraft!</h2>
+                    <p>Stalkerinnen zerstören dein Leben. Du ziehst dich ins Kloster zurück. 🕍</p>
+                    <button onclick="location.reload()">Nochmal spielen</button>
+                `;
+                return;
+            }
+            if (aktuelleKarte >= karten.length) {
+                document.getElementById("spielbereich").innerHTML = `
+                    <p>🃏 Spiel beendet. Danke fürs Mitspielen!</p>
+                    <button onclick="location.reload()">Nochmal spielen</button>
+                `;
+                return;
+            }
+
+            const karte = karten[aktuelleKarte];
+            let html = `
+                <div class="karte">
+                    <h2>${karte.frage}</h2>
+                    ${karte.optionen.map((opt, index) =>
+                        `<div class="option" onclick="waehleOption(${index})">${opt.text}</div>`).join('')}
+                </div>
+            `;
+            document.getElementById("spielbereich").innerHTML = html;
+        }
+
+        function waehleOption(index) {
+            const option = karten[aktuelleKarte].optionen[index];
+            option.effect();
+            updateStatus();
+            aktuelleKarte++;
+            zeigeKarte();
+        }
+
+        function updateStatus() {
+            document.getElementById("geldText").innerText = geld;
+            document.getElementById("freiheitText").innerText = freiheit;
+            document.getElementById("einflussText").innerText = einfluss;
+            document.getElementById("anziehungText").innerText = anziehung;
+
+            document.getElementById("geldBar").style.width = Math.min(geld / 1000 * 100, 100) + "%";
+            document.getElementById("freiheitBar").style.width = Math.min(freiheit, 100) + "%";
+            document.getElementById("einflussBar").style.width = Math.min(einfluss, 100) + "%";
+            document.getElementById("anziehungBar").style.width = Math.min(anziehung, 100) + "%";
+        }
+
+        updateStatus();
+    </script>
+</body>
+</html>
+
+
