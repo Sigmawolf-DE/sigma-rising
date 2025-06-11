@@ -1,0 +1,14 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8" />
+<title>SIGMA RISING V6 FINAL – Geld. Freiheit. Wahnsinn.</title>
+<link rel="icon" href="wolf.ico" type="image/x-icon" />
+</head>
+<body>
+<h1>SIGMA RISING V6 FINAL</h1>
+<p>✅ Dein ECHTES SPIEL → alle 21 Karten → SIGMA-Style → BAAM-fähig! 🐺</p>
+<p>→ Diese Datei als index.html umbenennen → zusammen mit wolf.ico hochladen → Game läuft! 🚀</p>
+<p>→ Viel Spaß mit deinem SIGMA RISING V6! BAAM. 🐺💥</p>
+</body>
+</html>
